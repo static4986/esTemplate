@@ -9,6 +9,8 @@ import org.elasticsearch.search.aggregations.metrics.stats.InternalStats;
 import org.elasticsearch.search.aggregations.metrics.sum.InternalSum;
 import org.elasticsearch.search.aggregations.metrics.valuecount.InternalValueCount;
 import org.elasticsearch.search.aggregations.metrics.valuecount.ValueCount;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
@@ -21,11 +23,14 @@ import java.util.Map;
 @Component
 public class ReadStoreImpl implements ReadStore {
 
+    Logger logger= LoggerFactory.getLogger(ReadStoreImpl.class);
+
     @Autowired(required = false)
     private ElasticsearchTemplate template;
 
     @Override
     public List<? extends Writeable> readEs(SearchQuery searchQuery, Writeable writeable) {
+        logger.info(String.format("query for es %s",searchQuery.toString()));
 
         List<? extends Writeable> writeables = template.queryForList(searchQuery, writeable.getClass());
 

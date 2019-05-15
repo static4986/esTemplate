@@ -6,6 +6,9 @@ import com.cn.yongrui.es.esControl.EsControl;
 import com.cn.yongrui.es.mock.MockStudentList;
 import com.cn.yongrui.es.repository.StudentReadRespository;
 import com.cn.yongrui.es.repository.StudentWriteRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +20,7 @@ import java.util.Map;
 @RequestMapping(value = "/es")
 public class EsController {
 
+    private final static Logger log=LoggerFactory.getLogger(EsController.class);
 
     @Autowired
     private StudentWriteRepository studentWriteRepository;
@@ -30,6 +34,12 @@ public class EsController {
     @RequestMapping(value = "/queryList",method = RequestMethod.POST)
     @ResponseBody
     public List<Student> queryEs(Student student){
+        String traceId = MDC.get("X-B3-TraceId");
+        String spanId = MDC.get("X-B3-SpanId");
+        System.out.println(traceId);
+        System.out.println(spanId);
+
+        log.info("开始查询es数据");
         List<Student> students = readRespository.repositoryStore(student);
         return students;
     }
